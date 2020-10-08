@@ -5,7 +5,7 @@
         <div class="card mt-2">
             <div class="card-img-top">
                 <#if message.filename??>
-                    <img src="/img/${message.filename}" alt="нема зображення" class="card-img-top">
+                    <img src="/img/${message.filename}" alt="${message.filename}" class="card-img-top">
                 </#if>
             </div>
             <div class="card-body">

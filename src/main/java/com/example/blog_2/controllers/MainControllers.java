@@ -44,14 +44,18 @@ public class MainControllers {
     @GetMapping("/main")
     public String mainPage(@RequestParam(required = false,defaultValue = "") String text,Model model){
         model.addAttribute("tittle", "Main Page");
+
         Iterable<Messages> messages = messageRepository.findAll();
+
         if(text!=null&&!text.isEmpty()){
             messages = messageRepository.findByTag(text);
         }else {
             messages = messageRepository.findAll();
         }
+
         model.addAttribute("messages",messages);
         model.addAttribute("filter",text);
+
         return "main_page";
     }
 
@@ -71,7 +75,7 @@ public class MainControllers {
             model.mergeAttributes(errorsMap);
             model.addAttribute("message",message);
         }else {
-            saveFile(file, message);
+            saveFile(file, message,model);
         }
 
         Iterable<Messages> messages = messageRepository.findAll();
@@ -79,23 +83,28 @@ public class MainControllers {
         return "main_page";
     }
 
-    private void saveFile(@RequestParam("file") MultipartFile file, @Valid Messages message) throws IOException {
-        if(file!=null) {
+    private void saveFile(@RequestParam("file") MultipartFile file, @Valid Messages message,Model model) throws IOException {
+
+        if (file != null && !file.getOriginalFilename().isEmpty()) {
+
             File file1 = new File(uploadPath);
 
-            if (!file1.exists() && !file.getOriginalFilename().isEmpty()) {
+            if (!file1.exists()) {
                 file1.mkdir();
             }
 
             String uuidFile = UUID.randomUUID().toString();
             String resulFileName = uuidFile + "." + file.getOriginalFilename();
 
-            file.transferTo(new File(uploadPath + "/" + resulFileName));
+            file.transferTo(new File(file1.getCanonicalPath() + "/" + resulFileName));
 
             message.setFilename(resulFileName);
-            messageRepository.save(message);
         }
+        model.addAttribute("message", null);
+
+        messageRepository.save(message);
     }
+
 
     @GetMapping("/user-messages/{user}")
     public String userMessages(
@@ -125,7 +134,8 @@ public class MainControllers {
             @RequestParam("id") Messages message,
             @RequestParam("text") String text,
             @RequestParam("tag") String tag,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            Model model
     ) throws IOException {
         if (message.getAuthor().equals(currentUser)){
             if(!StringUtils.isEmpty(text)){
@@ -136,7 +146,7 @@ public class MainControllers {
                 message.setTag(tag);
             }
 
-            saveFile(file, message);
+            saveFile(file, message,model);
 
             messageRepository.save(message);
         }
