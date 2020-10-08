@@ -1,5 +1,17 @@
 <#import "parts/common.ftlh" as c>
 <@c.page>
-    <h5>Привіт!</h5>
-    <div>Ласкаво просимо у наш аналог Твіттера</div>
+    <div class="text-info">
+        <div class="mx-auto">
+            <h5 style="font-size: 40px">Hello!</h5>
+            <div>Welcome to our analog of twitter.</div>
+        </div>
+        <div class="text-uppercase" style="font-size: 100px; font-weight: bold;">
+            <div>
+                Tell the<br>
+                world about<br>
+                your thoughts<br>
+            </div>
+        </div>
+    </div>
+
 </@c.page>

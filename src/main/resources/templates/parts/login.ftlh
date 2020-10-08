@@ -1,3 +1,5 @@
+<#include "security.ftlh">
+
 <#macro login path isRegisterForm>
     <form action="${path}" method="post">
         <div class="form-group ml-5">
@@ -47,7 +49,7 @@
                 </#if>
             </div>
             <div>
-                <div class="g-recaptcha ml-5 mt-4 mb-4" data-sitekey="6LcqDNAZAAAAAKiXAbX6SsO11n8a6Zu4Kpjxpvp7"></div>
+                <div class="g-recaptcha ml-5 mt-4 mb-4" data-sitekey="6LeQGNUZAAAAALv0D7EnOszSrEgtC68JBtzeNFap"></div>
                 <#if captchaError??>
                     <div class="alert alert-danger" role="alert">
                         ${captchaError}
@@ -65,7 +67,7 @@
 
 <#macro logout>
     <form action="/logout" method="post">
-        <button type="submit" class="btn btn-primary ml-5">Log out</button>
-        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+        <button type="submit" class="btn btn-primary ml-5"><#if user??>Log out<#else>Log in</#if></button>
+        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
     </form>
 </#macro>
